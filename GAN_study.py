@@ -230,7 +230,7 @@ train(train_dataset, EPOCHS)
 
 # 创建 GIF
 display_image(EPOCHS)
-anim_file = 'dcgan.gif'
+anim_file = 'DCGAN_study/train_result/dcgan.gif'
 with imageio.get_writer(anim_file, mode='I') as writer:
     filenames = glob.glob('image*.png')
     filenames = sorted(filenames)
