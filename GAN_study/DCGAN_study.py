@@ -211,7 +211,7 @@ generator_optimizer = tf.keras.optimizers.Adam(1e-4)
 discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
 
 # 设置检查点
-checkpoint_dir = 'DCGAN_study/training_checkpoints'
+checkpoint_dir = 'training_checkpoints'
 checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
 checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  discriminator_optimizer=discriminator_optimizer,
@@ -230,7 +230,7 @@ train(train_dataset, EPOCHS)
 
 # 创建 GIF
 display_image(EPOCHS)
-anim_file = 'DCGAN_study/train_result/dcgan.gif'
+anim_file = 'train_result/dcgan.gif'
 with imageio.get_writer(anim_file, mode='I') as writer:
     filenames = glob.glob('image*.png')
     filenames = sorted(filenames)
