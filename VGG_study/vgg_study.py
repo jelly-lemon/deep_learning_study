@@ -1,6 +1,6 @@
 from tensorflow.keras.applications import vgg16, vgg19
 from tensorflow import keras
-from tensorflow.python.keras.engine.training import Model
+
 
 
 def test_0():

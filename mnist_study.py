@@ -1,4 +1,3 @@
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
@@ -9,7 +8,7 @@ def get_model():
     inputs = keras.Input(shape=(784,))
     dense_1 = layers.Dense(64, activation="relu")(inputs)
     dense_2 = layers.Dense(64, activation="relu")(dense_1)
-    outputs = layers.Dense(10)(dense_2)
+    outputs = layers.Dense(10)(dense_2) # 如果不指定激活函数，默认 Linear
     model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
     model.summary()
     #
@@ -32,9 +31,12 @@ def test_0():
     # 开个 VPN
     #
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+    print("x_train.shape:", x_train.shape)
+    print("y_train.shape:", y_train.shape)
 
     #
-    # 归一化
+    # 先将二维矩阵转一维向量
+    # 再归一化 -> [0, 1]
     #
     x_train = x_train.reshape(60000, 784).astype("float32") / 255
     x_test = x_test.reshape(10000, 784).astype("float32") / 255
