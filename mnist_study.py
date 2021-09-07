@@ -8,7 +8,7 @@ def get_model():
     inputs = keras.Input(shape=(784,))
     dense_1 = layers.Dense(64, activation="relu")(inputs)
     dense_2 = layers.Dense(64, activation="relu")(dense_1)
-    outputs = layers.Dense(10)(dense_2) # 如果不指定激活函数，默认 Linear
+    outputs = layers.Dense(10)(dense_2) # 如果不指定激活函数，默认 Linear（即线性激活函数）
     model = keras.Model(inputs=inputs, outputs=outputs, name="mnist_model")
     model.summary()
     #
