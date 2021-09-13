@@ -36,6 +36,8 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
     # 一个句子包含了许多单词，把词频很小的单词给去掉
     top_words = 5000
     (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=top_words)
+    print(x_train.shape, x_train[0])
+    print(y_train.shape, y_train[0])
 
     # pad_sequences：将序列转化为经过填充以后的一个长度相同的新序列
     # truncate and pad input sequences
