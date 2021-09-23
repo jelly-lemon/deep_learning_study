@@ -28,7 +28,8 @@ def test_0():
     #
     # 加载数据
     # 首次运行会从网络下载，https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
-    # 开个 VPN
+    # 图像大小：(28, 28)
+    # 【注意】开个 VPN 下载更快
     #
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
     print("x_train.shape:", x_train.shape)
