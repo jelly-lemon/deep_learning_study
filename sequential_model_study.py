@@ -153,7 +153,7 @@ def test_6():
     # fit: 进行训练，实际上只会训练最后一层
     #
     model.compile()
-    model.fit(...)
+    model.fit()
 
 
 def test_7():
@@ -170,12 +170,11 @@ def test_7():
 
     #
     # 冻结基模型
-    # Freeze the base model
     #
     base_model.trainable = False
 
     #
-    # Use a Sequential model to add a trainable classifier on top
+    # 在基模型末尾添加其它层
     #
     model = keras.Sequential([
         base_model,
@@ -183,10 +182,10 @@ def test_7():
     ])
 
     #
-    # Compile & train
+    # 编译训练
     #
-    model.compile(...)
-    model.fit(...)
+    model.compile()
+    model.fit()
 
 
 if __name__ == '__main__':
