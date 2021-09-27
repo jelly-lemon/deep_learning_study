@@ -96,7 +96,6 @@ def test_1():
 def test_2():
     """
     使用 CNN 模型：LeNet 结构来分类 mnist 数据
-
     """
     inputs = keras.Input(shape=(28, 28, 1))
     conv2D_1 = layers.Conv2D(6, (3, 3), activation='relu')(inputs)
@@ -116,6 +115,8 @@ def test_2():
     x_train = x_train.reshape(60000, 28, 28, 1).astype("float32") / 255
     x_test = x_test.reshape(10000, 28, 28, 1).astype("float32") / 255
 
+    # 损失函数用 SparseCategoricalCrossentropy，y 值就必须为 int 类型
+    # from_logits=False，那么输出层用加激活函数，否则不加
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
         optimizer=keras.optimizers.RMSprop(),

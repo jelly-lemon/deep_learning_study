@@ -1,3 +1,6 @@
+"""
+keras 自带 vgg 模型
+"""
 from tensorflow.keras.applications import vgg16, vgg19
 from tensorflow import keras
 
@@ -5,6 +8,8 @@ from tensorflow import keras
 
 def test_0():
     """
+    使用 keras 自带的 VGG 模型
+
     include_top：是否要最后的 3 层全连接层
     weights: Node 随机初始化，'imagenet' 下载从 ImageNet 训练的权重
     """
@@ -15,9 +20,7 @@ def test_0():
                          layers=keras.layers,
                          models=keras.models,
                          utils=keras.utils)
-    # vgg_16 = Model()
-    print(type(vgg_16))
-    print(vgg_16.summary())
+    vgg_16.summary()
 
 def test_1():
     """
@@ -35,4 +38,4 @@ def test_1():
 
 
 if __name__ == '__main__':
-    test_1()
+    test_0()
