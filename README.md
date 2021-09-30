@@ -14,3 +14,6 @@ tensorflow: 2.1.4
 
 - Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
 
+- ImportError: Failed to import pydot. You must install pydot and graphviz for `pydotprint` to work.
+
+
