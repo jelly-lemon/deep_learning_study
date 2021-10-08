@@ -5,15 +5,21 @@ Python: 3.6
 
 tensorflow: 2.1.4
 
+# 数据集
+## MNIST
+```python
+from tensorflow_core.python.keras.datasets import mnist
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+```
+
+## IMDB
+```python
+from tensorflow_core.python.keras.datasets import imdb
+imdb.load_data()
+```
 
 
 # 遇到的问题
-- Could not load dynamic library 'cudart64_101.dll'; dlerror: cudart64_101.dll not found
 
-直接忽略。Ignore above cudart dlerror if you do not have a GPU set up on your machine.
-
-- Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
-
-- ImportError: Failed to import pydot. You must install pydot and graphviz for `pydotprint` to work.
 
 
