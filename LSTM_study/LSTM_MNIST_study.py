@@ -1,5 +1,6 @@
 """
 LSTM + MNIST
+MNIST 非序列数据，不适合 LSTM
 
 Train on 54000 samples, validate on 6000 samples
 Epoch 1/3
