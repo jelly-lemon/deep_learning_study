@@ -9,6 +9,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+
 class TokenEmbedding(layers.Layer):
     def __init__(self, num_vocab=1000, maxlen=100, num_hid=64):
         super().__init__()
@@ -43,7 +44,6 @@ class SpeechFeatureEmbedding(layers.Layer):
         return self.conv3(x)
 
 
-
 class TransformerEncoder(layers.Layer):
     def __init__(self, embed_dim, num_heads, feed_forward_dim, rate=0.1):
         super().__init__()
@@ -66,6 +66,7 @@ class TransformerEncoder(layers.Layer):
         ffn_output = self.ffn(out1)
         ffn_output = self.dropout2(ffn_output, training=training)
         return self.layernorm2(out1 + ffn_output)
+
 
 class TransformerDecoder(layers.Layer):
     def __init__(self, embed_dim, num_heads, feed_forward_dim, dropout_rate=0.1):
@@ -119,15 +120,15 @@ class TransformerDecoder(layers.Layer):
 
 class Transformer(keras.Model):
     def __init__(
-        self,
-        num_hid=64,
-        num_head=2,
-        num_feed_forward=128,
-        source_maxlen=100,
-        target_maxlen=100,
-        num_layers_enc=4,
-        num_layers_dec=1,
-        num_classes=10,
+            self,
+            num_hid=64,
+            num_head=2,
+            num_feed_forward=128,
+            source_maxlen=100,
+            target_maxlen=100,
+            num_layers_enc=4,
+            num_layers_dec=1,
+            num_classes=10,
     ):
         super().__init__()
         self.loss_metric = keras.metrics.Mean(name="loss")
@@ -220,27 +221,6 @@ class Transformer(keras.Model):
         return dec_input
 
 
-# 下载数据，约 3.6 GB
-keras.utils.get_file(
-    os.path.join(os.getcwd(), "data.tar.gz"),
-    "https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2",
-    extract=True,
-    archive_format="tar",
-    cache_dir=".",
-)
-
-
-saveto = "./datasets/LJSpeech-1.1"
-wavs = glob("{}/**/*.wav".format(saveto), recursive=True)
-
-id_to_text = {}
-with open(os.path.join(saveto, "metadata.csv"), encoding="utf-8") as f:
-    for line in f:
-        id = line.strip().split("|")[0]
-        text = line.strip().split("|")[2]
-        id_to_text[id] = text
-
-
 def get_data(wavs, id_to_text, maxlen=50):
     """ returns mapping of audio paths and transcription texts """
     data = []
@@ -250,12 +230,13 @@ def get_data(wavs, id_to_text, maxlen=50):
             data.append({"audio": w, "text": id_to_text[id]})
     return data
 
+
 class VectorizeChar:
     def __init__(self, max_len=50):
         self.vocab = (
-            ["-", "#", "<", ">"]
-            + [chr(i + 96) for i in range(1, 27)]
-            + [" ", ".", ",", "?"]
+                ["-", "#", "<", ">"]
+                + [chr(i + 96) for i in range(1, 27)]
+                + [" ", ".", ",", "?"]
         )
         self.max_len = max_len
         self.char_to_idx = {}
@@ -271,12 +252,6 @@ class VectorizeChar:
 
     def get_vocabulary(self):
         return self.vocab
-
-
-max_target_len = 200  # all transcripts in out data are < 200 characters
-data = get_data(wavs, id_to_text, max_target_len)
-vectorizer = VectorizeChar(max_target_len)
-print("vocab size", len(vectorizer.get_vocabulary()))
 
 
 def create_text_ds(data):
@@ -324,15 +299,9 @@ def create_tf_dataset(data, bs=4):
     return ds
 
 
-split = int(len(data) * 0.99)
-train_data = data[:split]
-test_data = data[split:]
-ds = create_tf_dataset(train_data, bs=64)
-val_ds = create_tf_dataset(test_data, bs=4)
-
 class DisplayOutputs(keras.callbacks.Callback):
     def __init__(
-        self, batch, idx_to_token, target_start_token_idx=27, target_end_token_idx=28
+            self, batch, idx_to_token, target_start_token_idx=27, target_end_token_idx=28
     ):
         """Displays a batch of outputs after every epoch
 
@@ -362,18 +331,19 @@ class DisplayOutputs(keras.callbacks.Callback):
                 prediction += self.idx_to_char[idx]
                 if idx == self.target_end_token_idx:
                     break
-            print(f"target:     {target_text.replace('-','')}")
+            print(f"target:     {target_text.replace('-', '')}")
             print(f"prediction: {prediction}\n")
+
 
 class CustomSchedule(keras.optimizers.schedules.LearningRateSchedule):
     def __init__(
-        self,
-        init_lr=0.00001,
-        lr_after_warmup=0.001,
-        final_lr=0.00001,
-        warmup_epochs=15,
-        decay_epochs=85,
-        steps_per_epoch=203,
+            self,
+            init_lr=0.00001,
+            lr_after_warmup=0.001,
+            final_lr=0.00001,
+            warmup_epochs=15,
+            decay_epochs=85,
+            steps_per_epoch=203,
     ):
         super().__init__()
         self.init_lr = init_lr
@@ -386,8 +356,8 @@ class CustomSchedule(keras.optimizers.schedules.LearningRateSchedule):
     def calculate_lr(self, epoch):
         """ linear warm up - linear decay """
         warmup_lr = (
-            self.init_lr
-            + ((self.lr_after_warmup - self.init_lr) / (self.warmup_epochs - 1)) * epoch
+                self.init_lr
+                + ((self.lr_after_warmup - self.init_lr) / (self.warmup_epochs - 1)) * epoch
         )
         decay_lr = tf.math.maximum(
             self.final_lr,
@@ -402,10 +372,40 @@ class CustomSchedule(keras.optimizers.schedules.LearningRateSchedule):
         epoch = step // self.steps_per_epoch
         return self.calculate_lr(epoch)
 
+
+# 下载数据，约 3.6 GB
+keras.utils.get_file(
+    os.path.join(os.getcwd(), "data.tar.gz"),
+    "https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2",
+    extract=True,
+    archive_format="tar",
+    cache_dir=".",
+)
+
+saveto = "./datasets/LJSpeech-1.1"
+wavs = glob("{}/**/*.wav".format(saveto), recursive=True)
+id_to_text = {}
+with open(os.path.join(saveto, "metadata.csv"), encoding="utf-8") as f:
+    for line in f:
+        id = line.strip().split("|")[0]
+        text = line.strip().split("|")[2]
+        id_to_text[id] = text
+
+max_target_len = 200  # all transcripts in out data are < 200 characters
+data = get_data(wavs, id_to_text, max_target_len)
+vectorizer = VectorizeChar(max_target_len)
+print("vocab size", len(vectorizer.get_vocabulary()))
+
+split = int(len(data) * 0.99)
+train_data = data[:split]
+test_data = data[split:]
+ds = create_tf_dataset(train_data, bs=64)
+val_ds = create_tf_dataset(test_data, bs=4)
+
 batch = next(iter(val_ds))
 
 # The vocabulary to convert predicted indices into characters
-idx_to_char = vectorizer.get_vocabulary()
+idx_to_char = vectorizer.get_vocabulary() # ['-', '#', '<', '>', 'a', ..., 'z', ' ', '.', ',', '?']
 display_cb = DisplayOutputs(
     batch, idx_to_char, target_start_token_idx=2, target_end_token_idx=3
 )  # set the arguments as per vocabulary index for '<' and '>'
